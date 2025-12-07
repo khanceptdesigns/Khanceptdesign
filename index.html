@@ -9,6 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+  html {
+    scroll-behavior: smooth; /* Smooth scrolling */
+  }
+
+  /* Optional: offset for anchor scroll to avoid header overlap */
+  :target::before {
+    content: "";
+    display: block;
+    height: 120px; /* height of your header + spacing */
+    margin-top: -120px; 
+  }
+
   body {
     margin: 0;
     font-family: "Poppins", sans-serif;
@@ -194,6 +206,7 @@
   </ul>
 </nav>
 
+<!-- FEATURED SECTION -->
 <div class="container">
   <h2 id="featured" class="section-title">Featured Products</h2>
 
@@ -202,25 +215,21 @@
     <input type="text" id="searchBar" placeholder="Search products...">
   </div>
 
-  <!-- Product Grid -->
   <div class="product-grid">
 
     <!-- PRODUCT 1 -->
-<div class="product-card">
-  <img src="https://www.dropbox.com/scl/fi/h8gjyos4xd369h5l7a5bg/Photo-Dec-07-2025-4-41-30-PM.jpg?rlkey=ylkrpglloxr2dg6xtlli7akkw&st=f0yt0nea&raw=1" alt="Movado Watch" />
-  <div class="product-info">
-    <h3>Movado</h3>
-    <p>Movado Bold Quest Automatic Watch, Swiss Self-Winding Movement, Stainless Steel Bracelet 39mm</p>
-
-    <!-- PRICE SECTION -->
-    <p style="font-size: 1.1rem; margin-top: 10px;">
-      <span style="text-decoration: line-through; color: #777;">$995</span>
-      <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$796</span>
-    </p>
-
-    <a href="https://amzn.to/3KtUjL9">Buy Now</a>
-  </div>
-</div>
+    <div class="product-card">
+      <img src="https://www.dropbox.com/scl/fi/h8gjyos4xd369h5l7a5bg/Photo-Dec-07-2025-4-41-30-PM.jpg?rlkey=ylkrpglloxr2dg6xtlli7akkw&st=f0yt0nea&raw=1" alt="Movado Watch" />
+      <div class="product-info">
+        <h3>Movado</h3>
+        <p>Movado Bold Quest Automatic Watch, Swiss Self-Winding Movement, Stainless Steel Bracelet 39mm</p>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$995</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$796</span>
+        </p>
+        <a href="https://amzn.to/3KtUjL9">Buy Now</a>
+      </div>
+    </div>
 
     <!-- PRODUCT 2 -->
     <div class="product-card">
@@ -228,15 +237,13 @@
       <div class="product-info">
         <h3>Movado</h3>
         <p>Movado Museum Classic Men's Automatic Watch, Stainless Steel Bracelet, Self-Winding Luxury Timepiece - 40mm</p>
-    <!-- PRICE SECTION -->
-    <p style="font-size: 1.1rem; margin-top: 10px;">
-      <span style="text-decoration: line-through; color: #777;">$1495</span>
-      <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$1196</span>
-    </p>
-
-    <a href="https://amzn.to/4awGZjC">Buy Now</a>
-  </div>
-</div>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$1495</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$1196</span>
+        </p>
+        <a href="https://amzn.to/4awGZjC">Buy Now</a>
+      </div>
+    </div>
 
     <!-- PRODUCT 4 -->
     <div class="product-card">
@@ -244,91 +251,84 @@
       <div class="product-info">
         <h3>APPLE IPAD AIR</h3>
         <p>Apple iPad Air 11-inch with M3 chip Built for Apple Intelligence, Liquid Retina Display, 128GB, 12MP Front/Back Camera, Wi-Fi 6E, Touch ID, All-Day Battery Life — Purple</p>
-      <!-- PRICE SECTION -->
-    <p style="font-size: 1.1rem; margin-top: 10px;">
-      <span style="text-decoration: line-through; color: #777;">$599</span>
-      <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$499</span>
-    </p>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$599</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$499</span>
+        </p>
+        <a href="https://amzn.to/3KwQTHw">Buy Now</a>
+      </div>
+    </div>
 
-    <a href="https://amzn.to/3KwQTHw">Buy Now</a>
-  </div>
-</div>
-   
     <!-- PRODUCT — Stila Foundation -->
-<div class="product-card">
-  <img src="https://www.dropbox.com/scl/fi/zl82k7qdq0maoy03k30hv/Photo-Dec-07-2025-5-44-08-PM.jpg?rlkey=keaxx7w7rvk9l9kstrq2zi908&st=6jsdb82m&raw=1" alt="Stila Stay All Day Foundation & Concealer">
-  
-  <div class="product-info">
-    <h3>Stila Stay All Day Foundation & Concealer</h3>
-    <p>Long-lasting, flawless-coverage foundation and concealer duo designed to stay in place all day. Lightweight, blendable formula with a natural matte finish.</p>
-    
-    <!-- PRICE SECTION -->
-    <p style="font-size: 1.1rem; font-weight: 700; color: #d40000; margin-top: 10px;">
-      $42
-    </p>
+    <div class="product-card">
+      <img src="https://www.dropbox.com/scl/fi/zl82k7qdq0maoy03k30hv/Photo-Dec-07-2025-5-44-08-PM.jpg?rlkey=keaxx7w7rvk9l9kstrq2zi908&st=6jsdb82m&raw=1" alt="Stila Stay All Day Foundation & Concealer">
+      <div class="product-info">
+        <h3>Stila Stay All Day Foundation & Concealer</h3>
+        <p>Long-lasting, flawless-coverage foundation and concealer duo designed to stay in place all day. Lightweight, blendable formula with a natural matte finish.</p>
+        <p style="font-size: 1.1rem; font-weight: 700; color: #d40000; margin-top: 10px;">$42</p>
+        <a href="https://amzn.to/4rXVaEO">Buy Now</a>
+      </div>
+    </div>
 
-    <a href="https://amzn.to/4rXVaEO" style="text-decoration: none; background-color: #d40000; color: #fff; padding: 8px 16px; border-radius: 4px; display: inline-block;">
-      Buy Now
-    </a>
   </div>
 </div>
-    <!-- PRODUCT 5 -->
+
+<!-- SALE SECTION -->
+<div class="container" id="sale">
+  <h2 class="section-title">Sale Products</h2>
+
+  <div class="product-grid">
+
+    <!-- PRODUCT 1 -->
     <div class="product-card">
-      <img src="https://via.placeholder.com/400x260?text=Bag" alt="Designer Bag" />
+      <img src="https://www.dropbox.com/scl/fi/h8gjyos4xd369h5l7a5bg/Photo-Dec-07-2025-4-41-30-PM.jpg?rlkey=ylkrpglloxr2dg6xtlli7akkw&st=f0yt0nea&raw=1" alt="Movado Watch" />
       <div class="product-info">
-        <h3>Designer Bag</h3>
-        <p>High-end luxury leather bag.</p>
-        <a href="#">Buy Now</a>
+        <h3>Movado</h3>
+        <p>Movado Bold Quest Automatic Watch, Swiss Self-Winding Movement, Stainless Steel Bracelet 39mm</p>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$995</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$796</span>
+        </p>
+        <a href="https://amzn.to/3KtUjL9">Buy Now</a>
       </div>
     </div>
 
-    <!-- PRODUCT 6 -->
+    <!-- PRODUCT 2 -->
     <div class="product-card">
-      <video src="your-video3.mp4" autoplay muted loop playsinline></video>
+      <img src="https://www.dropbox.com/scl/fi/p42tbv80gbtq53yhi7e45/Photo-Dec-07-2025-5-19-46-PM.jpg?rlkey=mqiekmtc76us7j60x36s325p5&st=v5os1hlb&raw=1" alt="Movado Museum Classic" />
       <div class="product-info">
-        <h3>Fitness Tracker</h3>
-        <p>Monitors heart rate, steps, and sleep.</p>
-        <a href="#">Buy Now</a>
+        <h3>Movado</h3>
+        <p>Movado Museum Classic Men's Automatic Watch, Stainless Steel Bracelet, Self-Winding Luxury Timepiece - 40mm</p>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$1495</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$1196</span>
+        </p>
+        <a href="https://amzn.to/4awGZjC">Buy Now</a>
       </div>
     </div>
 
-    <!-- PRODUCT 7 -->
+    <!-- PRODUCT 4 -->
     <div class="product-card">
-      <img src="https://via.placeholder.com/400x260?text=Glasses" alt="Designer Sunglasses" />
+      <img src="https://www.dropbox.com/scl/fi/fn2iqk6dlv8urqoxc70id/Photo-Dec-07-2025-2-42-00-PM.jpg?rlkey=lqj8hdh6pr9r1nv4rky2vuvwf&st=ovmcr0yx&raw=1" alt="APPLE IPAD AIR" />
       <div class="product-info">
-        <h3>Designer Sunglasses</h3>
-        <p>UV protection, sleek modern style.</p>
-        <a href="#">Buy Now</a>
+        <h3>APPLE IPAD AIR</h3>
+        <p>Apple iPad Air 11-inch with M3 chip Built for Apple Intelligence, Liquid Retina Display, 128GB, 12MP Front/Back Camera, Wi-Fi 6E, Touch ID, All-Day Battery Life — Purple</p>
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          <span style="text-decoration: line-through; color: #777;">$599</span>
+          <span style="color: #d40000; font-weight: 700; margin-left: 10px;">$499</span>
+        </p>
+        <a href="https://amzn.to/3KwQTHw">Buy Now</a>
       </div>
     </div>
 
-    <!-- PRODUCT 8 -->
+    <!-- PRODUCT — Stila Foundation -->
     <div class="product-card">
-      <video src="your-video4.mp4" autoplay muted loop playsinline></video>
+      <img src="https://www.dropbox.com/scl/fi/zl82k7qdq0maoy03k30hv/Photo-Dec-07-2025-5-44-08-PM.jpg?rlkey=keaxx7w7rvk9l9kstrq2zi908&st=6jsdb82m&raw=1" alt="Stila Stay All Day Foundation & Concealer">
       <div class="product-info">
-        <h3>Bluetooth Speaker</h3>
-        <p>Rich bass, portable, waterproof.</p>
-        <a href="#">Buy Now</a>
-      </div>
-    </div>
-
-    <!-- PRODUCT 9 -->
-    <div class="product-card">
-      <img src="https://via.placeholder.com/400x260?text=Camera" alt="HD Camera" />
-      <div class="product-info">
-        <h3>HD Camera</h3>
-        <p>4K resolution, perfect for content creators.</p>
-        <a href="#">Buy Now</a>
-      </div>
-    </div>
-
-    <!-- PRODUCT 10 -->
-    <div class="product-card">
-      <video src="your-video5.mp4" autoplay muted loop playsinline></video>
-      <div class="product-info">
-        <h3>Gaming Headset</h3>
-        <p>Surround sound, noise-canceling mic.</p>
-        <a href="#">Buy Now</a>
+        <h3>Stila Stay All Day Foundation & Concealer</h3>
+        <p>Long-lasting, flawless-coverage foundation and concealer duo designed to stay in place all day. Lightweight, blendable formula with a natural matte finish.</p>
+        <p style="font-size: 1.1rem; font-weight: 700; color: #d40000; margin-top: 10px;">$42</p>
+        <a href="https://amzn.to/4rXVaEO">Buy Now</a>
       </div>
     </div>
 
