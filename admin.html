@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Product Editor</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  .admin-box {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #444;
+  }
+
+  .success-message {
+    margin-top: 20px;
+    color: green;
+    text-align: center;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Admin Product Editor</h1>
+
+<div class="admin-box">
+  <label>Image URL</label>
+  <input id="imgUrl" placeholder="https://example.com/image.jpg">
+
+  <label>Product Name</label>
+  <input id="productName" placeholder="Product Title">
+
+  <label>Description</label>
+  <textarea id="productDesc" placeholder="Short product description"></textarea>
+
+  <label>Original Price (leave empty if no sale)</label>
+  <input id="oldPrice" placeholder="Example: 149.99">
+
+  <label>Sale Price</label>
+  <input id="salePrice" placeholder="Required">
+
+  <label>Amazon URL / Product Link</label>
+  <input id="buyLink" placeholder="https://...">
+
+  <button onclick="addProduct()">Add Product</button>
+
+  <p id="success" class="success-message"></p>
+</div>
+
+<script>
+function addProduct() {
+  const img = document.getElementById("imgUrl").value.trim();
+  const name = document.getElementById("productName").value.trim();
+  const desc = document.getElementById("productDesc").value.trim();
+  const oldPrice = document.getElementById("oldPrice").value.trim();
+  const salePrice = document.getElementById("salePrice").value.trim();
+  const link = document.getElementById("buyLink").value.trim();
+
+  if (!img || !name || !desc || !salePrice || !link) {
+    alert("Please fill out all required fields.");
+    return;
+  }
+
+  let isSale = oldPrice !== "";
+
+  // Build product card HTML
+  const productHTML = `
+    <div class="product-card">
+      <img src="${img}" alt="${name}" />
+      <div class="product-info">
+        <h3>${name}</h3>
+        <p>${desc}</p>
+
+        <p style="font-size: 1.1rem; margin-top: 10px;">
+          ${isSale ? `<span style="text-decoration: line-through; color:#777;">$${oldPrice}</span>` : ""}
+          <span style="color:#d40000; font-weight:700; margin-left:${isSale ? "10px" : "0"};">$${salePrice}</span>
+        </p>
+
+        <a href="${link}">Buy Now</a>
+      </div>
+    </div>
+  `;
+
+  // Save to localStorage
+  const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
+  allProducts.push(productHTML);
+  localStorage.setItem("allProducts", JSON.stringify(allProducts));
+
+  // Auto-save sale items
+  if (isSale) {
+    const saleProducts = JSON.parse(localStorage.getItem("saleProducts")) || [];
+    saleProducts.push(productHTML);
+    localStorage.setItem("saleProducts", JSON.stringify(saleProducts));
+  }
+
+  // Success message
+  document.getElementById("success").innerText = "Product added successfully!";
+  
+  // Clear inputs
+  document.getElementById("imgUrl").value = "";
+  document.getElementById("productName").value = "";
+  document.getElementById("productDesc").value = "";
+  document.getElementById("oldPrice").value = "";
+  document.getElementById("salePrice").value = "";
+  document.getElementById("buyLink").value = "";
+}
+</script>
+
+</body>
+</html>
