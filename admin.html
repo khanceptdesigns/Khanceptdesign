@@ -6,17 +6,112 @@
 <title>Admin Product Editor</title>
 
 <style>
-  body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-  h1 { text-align: center; font-size: 2rem; }
-  .admin-box { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-  label { font-weight: bold; display: block; margin-top: 12px; }
-  input, textarea { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-  button { margin-top: 20px; width: 100%; padding: 12px; background: black; color: white; border: none; border-radius: 6px; font-size: 1.1rem; cursor: pointer; }
-  button:hover { background: #444; }
-  .success-message { margin-top: 20px; color: green; text-align: center; font-weight: bold; opacity: 0; transition: opacity 0.4s ease; }
-  .success-show { opacity: 1 !important; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .admin-box {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #444;
+  }
+
+  .success-message {
+    margin-top: 20px;
+    color: green;
+    text-align: center;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .success-show {
+    opacity: 1 !important;
+  }
+
+  .product-list {
+    margin: 40px auto;
+    max-width: 900px;
+  }
+
+  .product-item {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .product-item span {
+    font-weight: bold;
+  }
+
+  .product-actions button {
+    margin-left: 10px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .product-actions button.edit {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+  .product-actions button.delete {
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
 </style>
 </head>
+
 <body>
 
 <h1>Admin Product Editor</h1>
@@ -40,19 +135,53 @@
   <label>Amazon URL / Product Link</label>
   <input id="buyLink" placeholder="https://...">
 
-  <button onclick="addProduct()">Add Product</button>
+  <button onclick="addOrUpdateProduct()">Save Product</button>
 
   <p id="success" class="success-message"></p>
 </div>
 
+<div class="product-list" id="productList"></div>
+
 <script>
+let editingId = null; // Track which product is being edited
+
 function escapeHTML(str) {
   return str.replace(/[&<>"']/g, function(m) {
-    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m];
   });
 }
 
-function addProduct() {
+function renderProducts() {
+  const productList = document.getElementById("productList");
+  let allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
+
+  if (allProducts.length === 0) {
+    productList.innerHTML = `<p style="text-align:center; padding:50px;">No products added yet.</p>`;
+    return;
+  }
+
+  productList.innerHTML = "";
+  allProducts.forEach((prod, index) => {
+    const div = document.createElement("div");
+    div.className = "product-item";
+    div.innerHTML = `
+      <span>${prod.name} - $${prod.salePrice}</span>
+      <div class="product-actions">
+        <button class="edit" onclick="editProduct(${index})">Edit</button>
+        <button class="delete" onclick="deleteProduct(${index})">Delete</button>
+      </div>
+    `;
+    productList.appendChild(div);
+  });
+}
+
+function addOrUpdateProduct() {
   const img = escapeHTML(document.getElementById("imgUrl").value.trim());
   const name = escapeHTML(document.getElementById("productName").value.trim());
   const desc = escapeHTML(document.getElementById("productDesc").value.trim());
@@ -60,52 +189,86 @@ function addProduct() {
   const salePrice = escapeHTML(document.getElementById("salePrice").value.trim());
   const link = escapeHTML(document.getElementById("buyLink").value.trim());
 
-  if (!img || !name || !desc || !link || !salePrice) {
-    alert("Please fill out all required fields (image, name, description, sale price, link).");
+  if (!img || !name || !desc || !link) {
+    alert("Please fill out all required fields (image, name, description, link).");
     return;
   }
 
-  const productHTML = `
-    <div class="product-card">
-      <img src="${img}" alt="${name}" />
-      <div class="product-info">
-        <h3>${name}</h3>
-        <p>${desc}</p>
-        <p style="font-size:1.1rem; margin-top:10px;">
-          ${oldPrice ? `<span style="text-decoration:line-through; color:#777;">$${oldPrice}</span>` : ""}
-          <span style="color:#d40000; font-weight:700; margin-left:${oldPrice ? "10px":"0"};">$${salePrice}</span>
-        </p>
-        <a href="${link}">Buy Now</a>
-      </div>
-    </div>
-  `;
+  if (oldPrice && !salePrice) {
+    alert("If you enter an old price, you must enter a sale price.");
+    return;
+  }
 
-  // Load existing products or initialize arrays
+  if (!oldPrice && !salePrice) {
+    alert("Product must have at least a sale price.");
+    return;
+  }
+
   let allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
   let saleProducts = JSON.parse(localStorage.getItem("saleProducts")) || [];
 
-  // Avoid duplicates
-  if (!allProducts.includes(productHTML)) allProducts.push(productHTML);
-  localStorage.setItem("allProducts", JSON.stringify(allProducts));
+  const productData = { img, name, desc, oldPrice, salePrice, link };
 
-  if (oldPrice && !saleProducts.includes(productHTML)) {
-    saleProducts.push(productHTML);
-    localStorage.setItem("saleProducts", JSON.stringify(saleProducts));
+  if (editingId !== null) {
+    // Update product
+    allProducts[editingId] = productData;
+    editingId = null;
+  } else {
+    // Add new product
+    allProducts.push(productData);
   }
 
-  const msg = document.getElementById("success");
-  msg.textContent = "✅ Product added successfully!";
-  msg.classList.add("success-show");
-  setTimeout(() => msg.classList.remove("success-show"), 2000);
+  localStorage.setItem("allProducts", JSON.stringify(allProducts));
 
-  // Clear inputs
+  // Update saleProducts
+  saleProducts = allProducts.filter(p => p.oldPrice);
+  localStorage.setItem("saleProducts", JSON.stringify(saleProducts));
+
+  // Reset form
   document.getElementById("imgUrl").value = "";
   document.getElementById("productName").value = "";
   document.getElementById("productDesc").value = "";
   document.getElementById("oldPrice").value = "";
   document.getElementById("salePrice").value = "";
   document.getElementById("buyLink").value = "";
+
+  const msg = document.getElementById("success");
+  msg.textContent = editingId !== null ? "✅ Product updated!" : "✅ Product added!";
+  msg.classList.add("success-show");
+  setTimeout(() => msg.classList.remove("success-show"), 2000);
+
+  renderProducts();
 }
+
+function editProduct(index) {
+  const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
+  const prod = allProducts[index];
+
+  document.getElementById("imgUrl").value = prod.img;
+  document.getElementById("productName").value = prod.name;
+  document.getElementById("productDesc").value = prod.desc;
+  document.getElementById("oldPrice").value = prod.oldPrice;
+  document.getElementById("salePrice").value = prod.salePrice;
+  document.getElementById("buyLink").value = prod.link;
+
+  editingId = index;
+}
+
+function deleteProduct(index) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
+
+  let allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
+  allProducts.splice(index, 1);
+  localStorage.setItem("allProducts", JSON.stringify(allProducts));
+
+  let saleProducts = allProducts.filter(p => p.oldPrice);
+  localStorage.setItem("saleProducts", JSON.stringify(saleProducts));
+
+  renderProducts();
+}
+
+// Initial render
+renderProducts();
 </script>
 
 </body>
