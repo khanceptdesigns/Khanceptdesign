@@ -97,8 +97,8 @@
 
 <script>
 const homeGrid = document.getElementById("homeProductGrid");
+const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
 
-// Function to display products in the grid
 function displayProducts(grid, products){
   if(products.length === 0){
     grid.innerHTML = `<p style="text-align:center; font-size:1.2rem; padding:50px;">
@@ -122,28 +122,17 @@ function displayProducts(grid, products){
   }
 }
 
-// Fetch products.json with automatic cache-busting
-fetch("products.json?ts=" + Date.now())
-  .then(response => response.json())
-  .then(allProducts => {
-    // Display all products initially
-    displayProducts(homeGrid, allProducts);
+// Display all products
+displayProducts(homeGrid, allProducts);
 
-    // Live search
-    document.getElementById("searchBar").addEventListener("keyup", function(){
-      const filter = this.value.toLowerCase();
-      const filtered = allProducts.filter(prod => 
-        prod.name.toLowerCase().includes(filter) || prod.desc.toLowerCase().includes(filter)
-      );
-      displayProducts(homeGrid, filtered);
-    });
-  })
-  .catch(err => {
-    console.error("Failed to load products.json:", err);
-    homeGrid.innerHTML = `<p style="text-align:center; font-size:1.2rem; padding:50px;">
-      Failed to load products. Please check your JSON file.
-    </p>`;
-  });
+// Live Search
+document.getElementById("searchBar").addEventListener("keyup", function(){
+  const filter = this.value.toLowerCase();
+  const filtered = allProducts.filter(prod => 
+    prod.name.toLowerCase().includes(filter) || prod.desc.toLowerCase().includes(filter)
+  );
+  displayProducts(homeGrid, filtered);
+});
 </script>
 
 </body>
