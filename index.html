@@ -15,7 +15,7 @@ nav ul{list-style:none;margin:0;padding:0;}
 nav ul li{display:inline-block;margin:0 20px;}
 nav ul li a{color:white;text-decoration:none;font-weight:600;font-size:1.1rem;transition:0.3s;}
 nav ul li a:hover{color:#aaa;}
-nav ul li a.active{color:#1E90FF;font-weight:700;}
+nav ul li a.active{color:#1E90FF;font-weight:700;} /* Active tab */
 
 .container{width:95%;max-width:1400px;margin:40px auto;}
 .section-title{font-size:1.8rem;font-weight:700;margin-bottom:20px;}
@@ -36,8 +36,7 @@ nav ul li a.active{color:#1E90FF;font-weight:700;}
 .product-card img{width:100%;height:180px;object-fit:contain;background:#f9f9f9;}
 .product-info{padding:10px;}
 .product-info h3{margin:0;font-size:1rem;font-weight:600;}
-.product-info p{margin:5px 0;font-size:0.9rem;color:#555;}
-.product-info .price{font-weight:700;color:#d40000;}
+.product-info .price{margin:5px 0;font-weight:700;color:#d40000;}
 .product-info a{display:inline-block;margin-top:10px;padding:6px 12px;background:#000;color:white;text-decoration:none;border-radius:8px;transition:0.3s;font-size:0.9rem;}
 .product-info a:hover{background:#333;}
 .search-container{width:100%;max-width:500px;margin:20px auto;}
@@ -53,12 +52,11 @@ nav ul li a.active{color:#1E90FF;font-weight:700;}
 </header>
 
 <nav>
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="featured.html">Featured</a></li>
-    <li><a href="sale.html">Sale</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="sale.html">Sale</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
 </nav>
 
 <div class="search-container">
@@ -77,11 +75,12 @@ nav ul li a.active{color:#1E90FF;font-weight:700;}
 // Load products from localStorage
 const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
 
-// Group products by category
+// Group products by category (default to "Products" if missing)
 const categories = {};
 allProducts.forEach(prod => {
-  if(!categories[prod.category]) categories[prod.category] = [];
-  categories[prod.category].push(prod);
+  const category = prod.category || "Products";
+  if(!categories[category]) categories[category] = [];
+  categories[category].push(prod);
 });
 
 const categoryContainer = document.getElementById("categoryContainer");
@@ -92,14 +91,14 @@ function displayCategories(productsByCategory){
     const products = productsByCategory[category];
     const section = document.createElement("div");
     section.classList.add("category-section");
-    section.innerHTML = `<h2 class="section-title">${category}</h2>
+    const categoryTitle = category || "Products"; // Default to "Products"
+    section.innerHTML = `<h2 class="section-title">${categoryTitle}</h2>
       <div class="product-row">
         ${products.map(prod => `
           <div class="product-card">
             <img src="${prod.img}" alt="${prod.name}">
             <div class="product-info">
               <h3>${prod.name}</h3>
-              <p>${prod.desc}</p>
               <p class="price">
                 ${prod.oldPrice ? `<span style="text-decoration:line-through;color:#777;">$${prod.oldPrice}</span> ` : ""}$${prod.salePrice}
               </p>
@@ -125,11 +124,29 @@ document.getElementById("searchBar").addEventListener("keyup", function(){
   // Regroup filtered products by category
   const filteredCategories = {};
   filtered.forEach(prod => {
-    if(!filteredCategories[prod.category]) filteredCategories[prod.category] = [];
-    filteredCategories[prod.category].push(prod);
+    const category = prod.category || "Products";
+    if(!filteredCategories[category]) filteredCategories[category] = [];
+    filteredCategories[category].push(prod);
   });
 
   displayCategories(filteredCategories);
+});
+
+// Highlight active navigation tab
+const navLinks = document.querySelectorAll("nav ul li a");
+const currentPage = window.location.pathname.split("/").pop();
+navLinks.forEach(link => {
+  const linkPage = link.getAttribute("href");
+  if(linkPage === currentPage || (currentPage === "" && linkPage === "index.html")){
+    link.classList.add("active");
+  } else {
+    link.classList.remove("active");
+  }
+
+  link.addEventListener("click", () => {
+    navLinks.forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+  });
 });
 </script>
 
