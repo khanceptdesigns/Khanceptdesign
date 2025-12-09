@@ -15,10 +15,13 @@ form button:hover{background:#333;}
 table{width:100%;border-collapse:collapse;margin-top:20px;}
 table th, table td{padding:10px;border:1px solid #ccc;text-align:left;}
 table th{background:#eee;}
-button.edit, button.delete{padding:5px 10px;margin-right:5px;border:none;border-radius:6px;cursor:pointer;}
+button.edit, button.delete, button.move-top{padding:5px 10px;margin-right:5px;border:none;border-radius:6px;cursor:pointer;}
 button.edit{background:#1E90FF;color:white;} 
 button.delete{background:#d40000;color:white;}
+button.move-top{background:#FFA500;color:white;}
+button.move-top:hover{background:#FF8C00;}
 tr.dragging{opacity:0.5;}
+tr.drag-over{outline:2px dashed #1E90FF;}
 </style>
 </head>
 <body>
@@ -72,12 +75,14 @@ function renderTable(){
       <td>
         <button class="edit" onclick="editProduct(${index})">Edit</button>
         <button class="delete" onclick="deleteProduct(${index})">Delete</button>
+        <button class="move-top" onclick="moveToTop(${index})">Move to Top</button>
       </td>
     `;
 
     // Drag events
     tr.addEventListener("dragstart", dragStart);
     tr.addEventListener("dragover", dragOver);
+    tr.addEventListener("dragleave", dragLeave);
     tr.addEventListener("drop", drop);
     tr.addEventListener("dragend", dragEnd);
 
@@ -138,32 +143,48 @@ function deleteProduct(index){
   }
 }
 
-// Drag and drop sorting
+// Move to top
+function moveToTop(index){
+  if(index === 0) return;
+  const product = allProducts.splice(index, 1)[0];
+  allProducts.unshift(product);
+  localStorage.setItem("allProducts", JSON.stringify(allProducts));
+  renderTable();
+}
+
+// Drag and drop
 let dragSrcIndex = null;
 
 function dragStart(e){
   dragSrcIndex = +this.dataset.index;
   this.classList.add("dragging");
+  e.dataTransfer.effectAllowed = "move";
 }
 
 function dragOver(e){
   e.preventDefault();
+  this.classList.add("drag-over");
+}
+
+function dragLeave(e){
+  this.classList.remove("drag-over");
 }
 
 function drop(e){
+  e.preventDefault();
+  this.classList.remove("drag-over");
   const targetIndex = +this.dataset.index;
   if(dragSrcIndex === targetIndex) return;
-
   const draggedItem = allProducts[dragSrcIndex];
   allProducts.splice(dragSrcIndex, 1);
   allProducts.splice(targetIndex, 0, draggedItem);
-
   localStorage.setItem("allProducts", JSON.stringify(allProducts));
   renderTable();
 }
 
 function dragEnd(e){
-  this.classList.remove("dragging");
+  const rows = document.querySelectorAll("#productTable tr");
+  rows.forEach(row => row.classList.remove("dragging", "drag-over"));
 }
 
 // Initial render
