@@ -87,6 +87,7 @@ nav ul li a.active{color:#1E90FF;font-weight:700;}
   transition:0.3s;
   display:flex;
   flex-direction:column;
+  cursor:pointer;
 }
 
 .product-card:hover{transform:translateY(-5px);}
@@ -95,7 +96,7 @@ nav ul li a.active{color:#1E90FF;font-weight:700;}
   padding:10px;
   display:flex;
   flex-direction:column;
-  justify-content:flex-end; /* push price/button to bottom */
+  justify-content:flex-end;
   align-items:center;
   flex-grow:1;
   gap:8px;
@@ -165,9 +166,11 @@ const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
 
 // Group products by category (default to "Products" if missing)
 const categories = {};
-allProducts.forEach(prod => {
+allProducts.forEach((prod, index) => {
   const category = prod.category || "Products";
   if(!categories[category]) categories[category] = [];
+  // Store the product index for linking to featured page
+  prod.index = index;
   categories[category].push(prod);
 });
 
@@ -183,20 +186,25 @@ function displayCategories(productsByCategory){
     section.innerHTML = `<h2 class="section-title">${categoryTitle}</h2>
       <div class="product-row">
         ${products.map(prod => `
-          <div class="product-card">
+          <div class="product-card" onclick="goToFeatured(${prod.index})">
             <img src="${prod.img}" alt="${prod.name}">
             <div class="product-info">
               <h3>${prod.name}</h3>
               <span class="price">
                 ${prod.oldPrice ? `<span style="text-decoration:line-through;color:#777;">$${prod.oldPrice}</span> ` : ""}$${prod.salePrice}
               </span>
-              <a href="${prod.link}">Buy Now</a>
+              <a href="${prod.link}" target="_blank" onclick="event.stopPropagation()">Buy Now</a>
             </div>
           </div>
         `).join("")}
       </div>`;
     categoryContainer.appendChild(section);
   }
+}
+
+// Redirect to featured page with product index
+function goToFeatured(index){
+  window.location.href = `featured.html?product=${index}`;
 }
 
 // Initial display
