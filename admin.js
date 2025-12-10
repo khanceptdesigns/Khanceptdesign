@@ -1,17 +1,14 @@
+// === CONFIG ===
 const GITHUB_USERNAME = "khanceptdesigns";
 const REPO_NAME = "Khanceptdesign";
 const FILE_PATH = "products.json";
+const GITHUB_TOKEN = "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"; // ← paste your token here
 
-// IMPORTANT — add your PAT here
-const GITHUB_TOKEN = "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";
-
-// Load products
+// --- Load products from GitHub
 async function loadProducts() {
     try {
-        const res = await fetch(
-            `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`
-        );
-        if (!res.ok) throw new Error("Failed to load products");
+        const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`);
+        if (!res.ok) throw new Error("Failed to load products from GitHub");
         return await res.json();
     } catch (err) {
         alert("Error loading products: " + err.message);
@@ -19,34 +16,126 @@ async function loadProducts() {
     }
 }
 
-// Save products
+// --- Save products to GitHub
 async function saveProducts(products) {
     try {
-        const fileInfoRes = await fetch(
-            `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`
-        );
+        // Get file SHA
+        const fileInfoRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
+            headers: {
+                "Authorization": `token ${GITHUB_TOKEN}`
+            }
+        });
+
         const fileInfo = await fileInfoRes.json();
 
-        const updateRes = await fetch(
-            `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: "Updated products",
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
-                    sha: fileInfo.sha
-                })
-            }
-        );
+        // Update file
+        const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${GITHUB_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: "Updated products",
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
+                sha: fileInfo.sha
+            })
+        });
 
-        if (!updateRes.ok) throw new Error("GitHub rejected the save request");
+        if (!updateRes.ok) {
+            const errText = await updateRes.text();
+            throw new Error("GitHub Save Error: " + errText);
+        }
 
         return await updateRes.json();
     } catch (err) {
         alert("Error saving products: " + err.message);
     }
 }
+
+// --- Render products table
+async function renderTable() {
+    const products = await loadProducts();
+    const table = document.getElementById("productTable");
+    table.innerHTML = "";
+
+    products.forEach(prod => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${prod.id}</td>
+            <td>${prod.name}</td>
+            <td>${prod.category || "-"}</td>
+            <td>$${prod.salePrice}</td>
+            <td>${prod.oldPrice ? "$" + prod.oldPrice : "-"}</td>
+            <td>
+                <button class="edit" onclick="fillForm(${prod.id})">Edit</button>
+                <button class="delete" onclick="deleteProduct(${prod.id})">Delete</button>
+            </td>
+        `;
+        table.appendChild(tr);
+    });
+}
+
+// --- Add or update a product
+async function addProduct(product) {
+    let products = await loadProducts();
+    const index = products.findIndex(p => Number(p.id) === Number(product.id));
+
+    if (index >= 0) products[index] = product;
+    else products.push(product);
+
+    await saveProducts(products);
+    renderTable();
+}
+
+// --- Delete product
+async function deleteProduct(id) {
+    if (!confirm("Delete this product?")) return;
+
+    let products = await loadProducts();
+    products = products.filter(p => Number(p.id) !== Number(id));
+
+    await saveProducts(products);
+    renderTable();
+}
+
+// --- Fill form for editing
+async function fillForm(id) {
+    const products = await loadProducts();
+    const product = products.find(p => Number(p.id) === Number(id));
+
+    if (!product) return alert("Product not found!");
+
+    document.getElementById("productId").value = product.id;
+    document.getElementById("name").value = product.name;
+    document.getElementById("desc").value = product.desc;
+    document.getElementById("img").value = product.img;
+    document.getElementById("salePrice").value = product.salePrice;
+    document.getElementById("oldPrice").value = product.oldPrice || "";
+    document.getElementById("link").value = product.link;
+    document.getElementById("category").value = product.category || "Products";
+}
+
+// --- Handle form submit
+document.getElementById("productForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const product = {
+        id: Number(document.getElementById("productId").value),
+        name: document.getElementById("name").value,
+        desc: document.getElementById("desc").value,
+        img: document.getElementById("img").value,
+        salePrice: parseFloat(document.getElementById("salePrice").value),
+        oldPrice: document.getElementById("oldPrice").value
+            ? parseFloat(document.getElementById("oldPrice").value)
+            : null,
+        link: document.getElementById("link").value,
+        category: document.getElementById("category").value || "Products"
+    };
+
+    await addProduct(product);
+    e.target.reset();
+});
+
+// --- Start
+renderTable();
