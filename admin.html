@@ -3,107 +3,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Editor – KhanceptDesigns</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Admin Dashboard – KhanceptDesigns</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+/* ===== GLOBAL ===== */
 body {
-  font-family: "Poppins", sans-serif;
-  background: #f4f4f4;
-  margin: 0;
-  padding: 20px;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f7f7f7;
+    display: flex;
+    height: 100vh;
 }
-h1 {
-  color: #222;
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 250px;
+    background: #000;
+    color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
 }
-form {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  max-width: 500px;
-  margin-bottom: 40px;
+
+.sidebar h2 {
+    margin: 0 0 30px;
+    font-size: 26px;
+    text-align: center;
+    font-weight: 600;
 }
-form input, form textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: 0.3s;
 }
-form button {
-  padding: 10px 15px;
-  background: #000;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+
+.sidebar a:hover {
+    background: #333;
 }
-form button:hover {
-  background: #333;
+
+/* ===== MAIN AREA ===== */
+.main {
+    flex: 1;
+    padding: 25px;
+    overflow-y: auto;
 }
+
+.topnav {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.topnav h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* ===== FORM ===== */
+#productForm {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    max-width: 600px;
+}
+
+#productForm input,
+#productForm textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+#productForm button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#productForm button:hover {
+    background: #333;
+}
+
+/* ===== TABLE ===== */
+.table-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
 }
-table th, table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-  text-align: left;
-}
+
 table th {
-  background: #eee;
+    background: #000;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 500;
 }
-button.edit, button.delete {
-  padding: 5px 10px;
-  margin-right: 5px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
-button.edit {
-  background: #1E90FF;
-  color: white;
-} 
-button.delete {
-  background: #d40000;
-  color: white;
+
+.action-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+}
+
+.delete-btn {
+    background: #d40000;
+}
+
+.delete-btn:hover {
+    background: #a00000;
+}
+
+.edit-btn {
+    background: #1E90FF;
+    margin-right: 5px;
+}
+
+.edit-btn:hover {
+    background: #0c6dd8;
+}
+
+/* MOBILE */
+@media(max-width: 900px){
+    .sidebar {
+        display: none;
+    }
 }
 </style>
 </head>
 <body>
 
-<h1>Admin Editor – KhanceptDesigns</h1>
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
 
-<!-- Product Form -->
-<form id="productForm">
-  <input type="number" id="productId" placeholder="Product ID (unique)" required>
-  <input type="text" id="name" placeholder="Product Name" required>
-  <textarea id="desc" placeholder="Description"></textarea>
-  <input type="text" id="img" placeholder="Image URL" required>
-  <input type="number" id="salePrice" placeholder="Sale Price" required>
-  <input type="number" id="oldPrice" placeholder="Old Price (optional)">
-  <input type="text" id="link" placeholder="Product Link" required>
-  <input type="text" id="category" placeholder="Category (optional)">
-  <button type="submit">Add / Update Product</button>
-</form>
+    <a href="#">Dashboard</a>
+    <a href="#add-product">Add Product</a>
+    <a href="#products">All Products</a>
+</div>
 
-<!-- Products Table -->
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Price</th>
-      <th>Old Price</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="productTable"></tbody>
-</table>
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main">
 
-<!-- Admin JS -->
+    <div class="topnav">
+        <h1>KhanceptDesigns – Admin Dashboard</h1>
+    </div>
+
+    <!-- ===== PRODUCT FORM ===== -->
+    <form id="productForm">
+        <h2>Add / Update Product</h2>
+
+        <input type="number" id="productId" placeholder="Product ID (unique)" required>
+        <input type="text" id="name" placeholder="Product Name" required>
+        <textarea id="desc" placeholder="Product Description"></textarea>
+        <input type="text" id="img" placeholder="Image URL" required>
+        <input type="number" id="salePrice" placeholder="Sale Price" required>
+        <input type="number" id="oldPrice" placeholder="Old Price (optional)">
+        <input type="text" id="link" placeholder="Product Link" required>
+        <input type="text" id="category" placeholder="Category (optional)">
+        
+        <input type="password" id="token" placeholder="GitHub Token" required>
+
+        <button type="submit">Save Product</button>
+    </form>
+
+    <!-- ===== PRODUCTS TABLE ===== -->
+    <div class="table-container">
+        <h2>All Products</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Old Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
 <script src="admin.js"></script>
 
 </body>
