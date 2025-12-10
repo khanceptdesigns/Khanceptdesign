@@ -2,7 +2,7 @@
 const GITHUB_USERNAME = "KhanceptDesigns";
 const REPO_NAME = "Khanceptdesign";
 const FILE_PATH = "products.json";
-const GITHUB_TOKEN = "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"; // Replace with your new PAT
+const GITHUB_TOKEN = "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"; // Replace with your new PAT
 
 // --- Load products from GitHub
 async function loadProducts() {
