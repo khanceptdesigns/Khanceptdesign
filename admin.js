@@ -4,7 +4,7 @@ const REPO_NAME = "Khanceptdesign";
 const FILE_PATH = "products.json";
 
 // You will paste your GitHub Token inside this variable (KEEP IT SECRET)
-const GITHUB_TOKEN = "PASTE-YOUR-TOKEN-HERE";
+const GITHUB_TOKEN = "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";
 
 // === LOAD PRODUCTS FROM GITHUB ===
 async function loadProducts() {
