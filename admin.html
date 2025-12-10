@@ -6,28 +6,76 @@
 <title>Admin Editor – KhanceptDesigns</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-body{font-family:"Poppins",sans-serif;background:#f4f4f4;margin:0;padding:20px;}
-h1{color:#222;}
-form{background:white;padding:20px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);max-width:500px;margin-bottom:40px;}
-form input, form textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
-form button{padding:10px 15px;background:#000;color:white;border:none;border-radius:8px;cursor:pointer;}
-form button:hover{background:#333;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
-table th, table td{padding:10px;border:1px solid #ccc;text-align:left;}
-table th{background:#eee;}
-button.edit, button.delete, button.move-top{padding:5px 10px;margin-right:5px;border:none;border-radius:6px;cursor:pointer;}
-button.edit{background:#1E90FF;color:white;} 
-button.delete{background:#d40000;color:white;}
-button.move-top{background:#FFA500;color:white;}
-button.move-top:hover{background:#FF8C00;}
-tr.dragging{opacity:0.5;}
-tr.drag-over{outline:2px dashed #1E90FF;}
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+h1 {
+  color: #222;
+}
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+form input, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+form button {
+  padding: 10px 15px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+form button:hover {
+  background: #333;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+table th {
+  background: #eee;
+}
+button.edit, button.delete {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button.edit {
+  background: #1E90FF;
+  color: white;
+} 
+button.delete {
+  background: #d40000;
+  color: white;
+}
 </style>
 </head>
 <body>
 
 <h1>Admin Editor – KhanceptDesigns</h1>
 
+<!-- Product Form -->
 <form id="productForm">
   <input type="number" id="productId" placeholder="Product ID (unique)" required>
   <input type="text" id="name" placeholder="Product Name" required>
@@ -40,6 +88,7 @@ tr.drag-over{outline:2px dashed #1E90FF;}
   <button type="submit">Add / Update Product</button>
 </form>
 
+<!-- Products Table -->
 <table>
   <thead>
     <tr>
@@ -54,113 +103,8 @@ tr.drag-over{outline:2px dashed #1E90FF;}
   <tbody id="productTable"></tbody>
 </table>
 
-<script>
-// --- CONFIG ---
-const GITHUB_USERNAME = "KhanceptDesigns";
-const REPO_NAME = "Khanceptdesign";
-const FILE_PATH = "products.json";
-const GITHUB_TOKEN = "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"; // replace with your personal access token
+<!-- Admin JS -->
+<script src="admin.js"></script>
 
-// --- GitHub API ---
-async function loadProducts() {
-    const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`;
-    const res = await fetch(url);
-    return res.json();
-}
-
-async function saveProducts(products) {
-    const fileInfoRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`);
-    const fileInfo = await fileInfoRes.json();
-
-    await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
-        method: "PUT",
-        headers: {
-            "Authorization": `Bearer ${GITHUB_TOKEN}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            message: "Updated products",
-            content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
-            sha: fileInfo.sha
-        })
-    });
-}
-
-// --- DOM Elements ---
-const form = document.getElementById("productForm");
-const table = document.getElementById("productTable");
-
-// --- Render table ---
-async function renderTable(){
-    const products = await loadProducts();
-    table.innerHTML = "";
-    products.forEach((prod,index)=>{
-        const tr = document.createElement("tr");
-        tr.dataset.index=index;
-        tr.innerHTML=`
-            <td>${prod.id}</td>
-            <td>${prod.name}</td>
-            <td>${prod.category||"-"}</td>
-            <td>$${prod.salePrice}</td>
-            <td>${prod.oldPrice? "$"+prod.oldPrice:"-"}</td>
-            <td>
-                <button class="edit" onclick="fillForm(${prod.id})">Edit</button>
-                <button class="delete" onclick="deleteProduct(${prod.id})">Delete</button>
-            </td>
-        `;
-        table.appendChild(tr);
-    });
-}
-
-// --- Fill form for edit ---
-async function fillForm(id){
-    const products = await loadProducts();
-    const product = products.find(p => Number(p.id)===Number(id));
-    if(!product) return;
-    document.getElementById("productId").value=product.id;
-    document.getElementById("name").value=product.name;
-    document.getElementById("desc").value=product.desc;
-    document.getElementById("img").value=product.img;
-    document.getElementById("salePrice").value=product.salePrice;
-    document.getElementById("oldPrice").value=product.oldPrice||"";
-    document.getElementById("link").value=product.link;
-    document.getElementById("category").value=product.category||"";
-}
-
-// --- Add / Update product ---
-form.addEventListener("submit", async e=>{
-    e.preventDefault();
-    let products = await loadProducts();
-    const id = Number(document.getElementById("productId").value);
-    const product = {
-        id,
-        name: document.getElementById("name").value,
-        desc: document.getElementById("desc").value,
-        img: document.getElementById("img").value,
-        salePrice: parseFloat(document.getElementById("salePrice").value),
-        oldPrice: document.getElementById("oldPrice").value ? parseFloat(document.getElementById("oldPrice").value) : null,
-        link: document.getElementById("link").value,
-        category: document.getElementById("category").value || "Products"
-    };
-    const index = products.findIndex(p => Number(p.id)===id);
-    if(index>=0) products[index]=product;
-    else products.push(product);
-    await saveProducts(products);
-    await renderTable();
-    form.reset();
-});
-
-// --- Delete product ---
-async function deleteProduct(id){
-    if(!confirm("Are you sure?")) return;
-    let products = await loadProducts();
-    products = products.filter(p => Number(p.id)!==Number(id));
-    await saveProducts(products);
-    await renderTable();
-}
-
-// --- Initial render ---
-renderTable();
-</script>
 </body>
 </html>
