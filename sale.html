@@ -4,53 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KhanceptDesigns – Sale Products</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <style>
-  /* Same CSS as index.html for consistency */
-  body { margin:0; font-family:"Poppins", sans-serif; background:linear-gradient(135deg,#f0f0f0 0%,#dcdcdc 100%); color:#222; }
-  header{padding:60px 20px;text-align:center;background:linear-gradient(135deg,#000 0%,#222 100%);color:white;}
-  header h1{font-size:3rem;margin:0;font-weight:700;letter-spacing:-1px;}
-  header p{margin-top:12px;font-size:1.2rem;opacity:0.85;}
-  nav{background:#000;padding:15px 0;text-align:center;}
-  nav ul{list-style:none;margin:0;padding:0;}
-  nav ul li{display:inline-block;margin:0 20px;}
-  nav ul li a{color:white;text-decoration:none;font-weight:600;font-size:1.1rem;transition:0.3s ease;}
-  nav ul li a:hover{color:#aaa;}
-
-  /* Active tab style */
-  nav ul li a.active { color: #1E90FF; font-weight:700; }
-
-  .container{width:90%;max-width:1200px;margin:50px auto;}
-  .section-title{font-size:2.4rem;text-align:center;margin-bottom:40px;font-weight:700;}
-  .search-container{width:100%;max-width:500px;margin:0 auto 40px auto;}
-  #searchBar{width:100%;padding:14px 18px;font-size:1rem;border-radius:12px;border:2px solid #ccc;background:white;outline:none;transition:0.3s;}
-  #searchBar:focus{border-color:#000;box-shadow:0 0 10px rgba(0,0,0,0.15);}
-  .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:35px;}
-  .product-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(12px);border-radius:20px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,0.15);transition: transform 0.35s ease, box-shadow 0.35s ease;}
-  .product-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(0,0,0,0.25);}
-  .product-card img{width:100%;height:260px;object-fit:contain;background:#f5f5f5;}
-  .product-info{padding:20px;}
-  .product-info h3{margin:0;font-size:1.3rem;font-weight:600;}
-  .product-info p{margin-top:8px;font-size:0.95rem;opacity:0.85;}
-  .product-info a{display:inline-block;margin-top:14px;padding:12px 20px;background:linear-gradient(135deg,#000 0%,#444 100%);color:white;text-decoration:none;font-weight:600;border-radius:10px;transition:0.3s;}
-  .product-info a:hover{transform:translateY(-3px);background:linear-gradient(135deg,#444 0%,#000 100%);}
-  footer{text-align:center;padding:25px;margin-top:50px;background:#111;color:white;}
+  body { margin:0; font-family:"Poppins", sans-serif; background:#f0f0f0; color:#222; }
+  header { padding:60px 20px; text-align:center; background:#000; color:white; }
+  header h1 { font-size:3rem; margin:0; font-weight:700; letter-spacing:-1px; }
+  header p { margin-top:12px; font-size:1.2rem; opacity:0.85; }
+  nav { background:#000; padding:15px 0; text-align:center; }
+  nav ul { list-style:none; margin:0; padding:0; }
+  nav ul li { display:inline-block; margin:0 20px; }
+  nav ul li a { color:white; text-decoration:none; font-weight:600; font-size:1.1rem; transition:0.3s; }
+  nav ul li a:hover { color:#aaa; }
+  nav ul li a.active { color:#1E90FF; font-weight:700; }
+  .container { width:90%; max-width:1200px; margin:50px auto; }
+  .section-title { font-size:2.4rem; text-align:center; margin-bottom:40px; font-weight:700; }
+  .search-container { width:100%; max-width:500px; margin:0 auto 40px auto; }
+  #searchBar { width:100%; padding:14px 18px; font-size:1rem; border-radius:12px; border:2px solid #ccc; outline:none; transition:0.3s; }
+  #searchBar:focus { border-color:#000; box-shadow:0 0 10px rgba(0,0,0,0.15); }
+  .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:35px; }
+  .product-card { background:rgba(255,255,255,0.65); backdrop-filter:blur(12px); border-radius:20px; overflow:hidden; box-shadow:0 8px 26px rgba(0,0,0,0.15); transition: transform 0.35s ease, box-shadow 0.35s ease; }
+  .product-card.highlight { box-shadow:0 0 25px 6px #1E90FF; transition: box-shadow 0.5s ease; }
+  .product-card:hover { transform: translateY(-10px); box-shadow:0 15px 35px rgba(0,0,0,0.25); }
+  .product-card img { width:100%; height:260px; object-fit:contain; background:#f5f5f5; }
+  .product-info { padding:20px; }
+  .product-info h3 { margin:0; font-size:1.3rem; font-weight:600; }
+  .product-info p { margin-top:8px; font-size:0.95rem; opacity:0.85; }
+  .product-info a { display:inline-block; margin-top:14px; padding:12px 20px; background:linear-gradient(135deg,#000 0%,#444 100%); color:white; text-decoration:none; font-weight:600; border-radius:10px; transition:0.3s; }
+  .product-info a:hover { transform:translateY(-3px); background:linear-gradient(135deg,#444 0%,#000 100%); }
+  footer { text-align:center; padding:25px; margin-top:50px; background:#111; color:white; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>KhanceptDesigns</h1>
-  <p>Sale Products</p>
+  <p>Sale Products & Deals</p>
 </header>
 
 <nav>
   <ul>
     <li><a href="index.html">Home</a></li>
     <li><a href="featured.html">Featured</a></li>
-    <li><a href="sale.html">Sale</a></li>
+    <li><a href="sale.html" class="active">Sale</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -59,10 +54,10 @@
   <h2 class="section-title">Sale Products</h2>
 
   <div class="search-container">
-    <input type="text" id="searchBar" placeholder="Search sale products...">
+    <input type="text" id="searchBar" placeholder="Search products...">
   </div>
 
-  <div class="product-grid" id="saleGrid"></div>
+  <div class="product-grid" id="saleProductGrid"></div>
 </div>
 
 <footer>
@@ -70,21 +65,36 @@
 </footer>
 
 <script>
-// Load sale products
-const saleGrid = document.getElementById("saleGrid");
-const allProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
-const saleProducts = allProducts.filter(prod => prod.oldPrice && prod.salePrice);
+const GITHUB_USERNAME = "KhanceptDesigns";
+const REPO_NAME = "Khanceptdesign";
+const FILE_PATH = "products.json";
 
-// Display products
+const saleGrid = document.getElementById("saleProductGrid");
+let allProducts = [];
+
+// --- Load products with cache-busting
+async function loadProducts() {
+  try {
+    const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error("Failed to load products.json");
+    return await res.json();
+  } catch(err) {
+    console.error(err);
+    saleGrid.innerHTML = `<p style="text-align:center; padding:50px;">Error loading products.</p>`;
+    return [];
+  }
+}
+
+// --- Display only products with oldPrice (Sale items)
 function displayProducts(grid, products){
-  if(products.length === 0){
-    grid.innerHTML = `<p style="text-align:center; padding:50px; font-size:1.2rem;">
-      No sale items yet. Please add products with a sale price in the Admin Editor.
-    </p>`;
+  const saleItems = products.filter(p => p.oldPrice);
+  if(saleItems.length === 0){
+    grid.innerHTML = `<p style="text-align:center; font-size:1.2rem; padding:50px;">No sale products available.</p>`;
   } else {
-    grid.innerHTML = products.map(prod => `
-      <div class="product-card">
-        <img src="${prod.img}" alt="${prod.name}" />
+    grid.innerHTML = saleItems.map((prod, index) => `
+      <div class="product-card" id="product-${index}">
+        <img src="${prod.img}" alt="${prod.name}" onerror="this.src='images/fallback.png'"/>
         <div class="product-info">
           <h3>${prod.name}</h3>
           <p>${prod.desc}</p>
@@ -92,42 +102,51 @@ function displayProducts(grid, products){
             <span style="text-decoration: line-through; color:#777;">$${prod.oldPrice}</span>
             <span style="color:#d40000; font-weight:700; margin-left:10px;">$${prod.salePrice}</span>
           </p>
-          <a href="${prod.link}">Buy Now</a>
+          <a href="${prod.link}" target="_blank">Buy Now</a>
         </div>
       </div>
     `).join("");
   }
 }
 
-// Initial display
-displayProducts(saleGrid, saleProducts);
+// --- Initial load
+async function refreshProducts() {
+  allProducts = await loadProducts();
+  displayProducts(saleGrid, allProducts);
+}
+refreshProducts();
 
-// Live search
+// --- Auto-refresh every 15 seconds
+setInterval(refreshProducts, 15000);
+
+// --- Highlight product from URL parameter
+const urlParams = new URLSearchParams(window.location.search);
+const productIndex = urlParams.get("product");
+if(productIndex !== null){
+  const targetProduct = document.getElementById(`product-${productIndex}`);
+  if(targetProduct){
+    targetProduct.scrollIntoView({behavior:"smooth", block:"center"});
+    targetProduct.classList.add("highlight");
+    setTimeout(()=>targetProduct.classList.remove("highlight"),2000);
+  }
+}
+
+// --- Live search
 document.getElementById("searchBar").addEventListener("keyup", function(){
   const filter = this.value.toLowerCase();
-  const filtered = saleProducts.filter(prod =>
-    prod.name.toLowerCase().includes(filter) || prod.desc.toLowerCase().includes(filter)
+  const filtered = allProducts.filter(prod => 
+    (prod.name.toLowerCase().includes(filter) || prod.desc.toLowerCase().includes(filter)) && prod.oldPrice
   );
   displayProducts(saleGrid, filtered);
 });
 
-// Highlight active tab
+// --- Highlight active nav
 const navLinks = document.querySelectorAll("nav ul li a");
 const currentURL = window.location.pathname.split("/").pop();
-
 navLinks.forEach(link => {
   const linkPage = link.getAttribute("href");
-  if(linkPage === currentURL){
-    link.classList.add("active");
-  } else {
-    link.classList.remove("active");
-  }
-
-  // Update active tab dynamically on click
-  link.addEventListener("click", () => {
-    navLinks.forEach(l => l.classList.remove("active"));
-    link.classList.add("active");
-  });
+  if(linkPage === currentURL || (linkPage==="index.html" && currentURL==="")) link.classList.add("active");
+  else link.classList.remove("active");
 });
 </script>
 
