@@ -1,9 +1,8 @@
 // === CONFIG ===
-const GITHUB_USERNAME = "KhanceptDesigns";
-const REPO_NAME = "Khanceptdesign";
-const FILE_PATH = "products.json";
+const GITHUB_USERNAME = "KhanceptDesigns"; // your GitHub username
+const REPO_NAME = "Khanceptdesign";        // your repo name
+const FILE_PATH = "products.json";         // path in repo
 
-// This will be updated dynamically from the form
 let GITHUB_TOKEN = "";
 
 // --- Load products from GitHub
@@ -28,24 +27,16 @@ async function saveProducts(products) {
 
         // Get file metadata
         const fileInfoRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
-            headers: {
-                "Authorization": `Bearer ${GITHUB_TOKEN}`
-            }
+            headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` }
         });
 
-        if (!fileInfoRes.ok) {
-            throw new Error("GitHub Save Error: " + await fileInfoRes.text());
-        }
-
+        if (!fileInfoRes.ok) throw new Error("GitHub Save Error: " + await fileInfoRes.text());
         const fileInfo = await fileInfoRes.json();
 
-        // Upload new version
+        // Update file
         const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
             method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                "Content-Type": "application/json"
-            },
+            headers: { "Authorization": `Bearer ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
             body: JSON.stringify({
                 message: "Updated products",
                 content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
@@ -53,10 +44,7 @@ async function saveProducts(products) {
             })
         });
 
-        if(!updateRes.ok) {
-            throw new Error("GitHub Save Error: " + await updateRes.text());
-        }
-
+        if(!updateRes.ok) throw new Error("GitHub Save Error: " + await updateRes.text());
         return await updateRes.json();
 
     } catch(err) {
@@ -90,33 +78,33 @@ async function renderTable() {
 // --- Add or update product
 async function addProduct(product) {
     let products = await loadProducts();
+    // Assign unique ID if new
+    if(!product.id) {
+        product.id = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+    }
     const index = products.findIndex(p => Number(p.id) === Number(product.id));
-
     if(index >= 0) products[index] = product;
     else products.push(product);
 
     await saveProducts(products);
+    alert(`✅ Product "${product.name}" saved successfully!`);
     renderTable();
 }
 
 // --- Delete product
 async function deleteProduct(id) {
     if(!confirm("Delete this product?")) return;
-
     let products = await loadProducts();
     products = products.filter(p => Number(p.id) !== Number(id));
-
     await saveProducts(products);
     renderTable();
 }
 
-// --- Fill edit form
+// --- Fill form for editing
 async function fillForm(id) {
     const products = await loadProducts();
     const product = products.find(p => Number(p.id) === Number(id));
-
     if(!product) return alert("Product not found!");
-
     document.getElementById("productId").value = product.id;
     document.getElementById("name").value = product.name;
     document.getElementById("desc").value = product.desc;
@@ -127,14 +115,14 @@ async function fillForm(id) {
     document.getElementById("category").value = product.category || "";
 }
 
-// --- Form submit
+// --- Handle form submit
 document.getElementById("productForm").addEventListener("submit", async e => {
     e.preventDefault();
-
     GITHUB_TOKEN = document.getElementById("token").value.trim();
 
-    const product = {
-        id: Number(document.getElementById("productId").value),
+    const products = await loadProducts();
+    const newProduct = {
+        id: Number(document.getElementById("productId").value) || null,
         name: document.getElementById("name").value,
         desc: document.getElementById("desc").value,
         img: document.getElementById("img").value,
@@ -144,9 +132,9 @@ document.getElementById("productForm").addEventListener("submit", async e => {
         category: document.getElementById("category").value || "Products"
     };
 
-    await addProduct(product);
+    await addProduct(newProduct);
     e.target.reset();
 });
 
-// --- Start
+// --- Initial render
 renderTable();
