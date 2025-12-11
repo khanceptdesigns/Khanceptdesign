@@ -1,16 +1,15 @@
 // === CONFIG ===
-const GITHUB_USERNAME = "KhanceptDesigns"; // your GitHub username
-const REPO_NAME = "Khanceptdesign";        // your repo name
-const FILE_PATH = "products.json";         // path in repo
-const BRANCH = "main";                     // default branch
+const GITHUB_USERNAME = "KhanceptDesigns";
+const REPO_NAME = "Khanceptdesign";
+const FILE_PATH = "products.json";
 
+// This will be updated dynamically from the form
 let GITHUB_TOKEN = "";
 
 // --- Load products from GitHub
 async function loadProducts() {
     try {
-        const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/${BRANCH}/${FILE_PATH}`;
-        const res = await fetch(url);
+        const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`);
         if (!res.ok) throw new Error("Failed to load products from GitHub");
         return await res.json();
     } catch (err) {
@@ -30,14 +29,12 @@ async function saveProducts(products) {
         // Get file metadata
         const fileInfoRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
             headers: {
-                "Authorization": `token ${GITHUB_TOKEN}`,
-                "Accept": "application/vnd.github+json"
+                "Authorization": `Bearer ${GITHUB_TOKEN}`
             }
         });
 
         if (!fileInfoRes.ok) {
-            const text = await fileInfoRes.text();
-            throw new Error("GitHub Save Error: " + text);
+            throw new Error("GitHub Save Error: " + await fileInfoRes.text());
         }
 
         const fileInfo = await fileInfoRes.json();
@@ -46,26 +43,23 @@ async function saveProducts(products) {
         const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`, {
             method: "PUT",
             headers: {
-                "Authorization": `token ${GITHUB_TOKEN}`,
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github+json"
+                "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 message: "Updated products",
                 content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
-                sha: fileInfo.sha,
-                branch: BRANCH
+                sha: fileInfo.sha
             })
         });
 
-        if (!updateRes.ok) {
-            const text = await updateRes.text();
-            throw new Error("GitHub Save Error: " + text);
+        if(!updateRes.ok) {
+            throw new Error("GitHub Save Error: " + await updateRes.text());
         }
 
         return await updateRes.json();
 
-    } catch (err) {
+    } catch(err) {
         alert("Error saving products: " + err.message);
     }
 }
@@ -96,32 +90,33 @@ async function renderTable() {
 // --- Add or update product
 async function addProduct(product) {
     let products = await loadProducts();
-    if(!product.id) {
-        product.id = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-    }
     const index = products.findIndex(p => Number(p.id) === Number(product.id));
+
     if(index >= 0) products[index] = product;
     else products.push(product);
 
     await saveProducts(products);
-    alert(`✅ Product "${product.name}" saved successfully!`);
     renderTable();
 }
 
 // --- Delete product
 async function deleteProduct(id) {
     if(!confirm("Delete this product?")) return;
+
     let products = await loadProducts();
     products = products.filter(p => Number(p.id) !== Number(id));
+
     await saveProducts(products);
     renderTable();
 }
 
-// --- Fill form for editing
+// --- Fill edit form
 async function fillForm(id) {
     const products = await loadProducts();
     const product = products.find(p => Number(p.id) === Number(id));
+
     if(!product) return alert("Product not found!");
+
     document.getElementById("productId").value = product.id;
     document.getElementById("name").value = product.name;
     document.getElementById("desc").value = product.desc;
@@ -132,18 +127,14 @@ async function fillForm(id) {
     document.getElementById("category").value = product.category || "";
 }
 
-// --- Handle form submit
+// --- Form submit
 document.getElementById("productForm").addEventListener("submit", async e => {
     e.preventDefault();
+
     GITHUB_TOKEN = document.getElementById("token").value.trim();
 
-    if(!GITHUB_TOKEN) {
-        alert("❌ Please enter your GitHub token.");
-        return;
-    }
-
-    const newProduct = {
-        id: Number(document.getElementById("productId").value) || null,
+    const product = {
+        id: Number(document.getElementById("productId").value),
         name: document.getElementById("name").value,
         desc: document.getElementById("desc").value,
         img: document.getElementById("img").value,
@@ -153,9 +144,9 @@ document.getElementById("productForm").addEventListener("submit", async e => {
         category: document.getElementById("category").value || "Products"
     };
 
-    await addProduct(newProduct);
+    await addProduct(product);
     e.target.reset();
 });
 
-// --- Initial render
+// --- Start
 renderTable();
