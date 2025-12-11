@@ -18,5 +18,15 @@
     "oldPrice": null,
     "link": "https://amzn.to/48MDnHA",
     "category": "Makeup"
+  },
+  {
+    "id": 3,
+    "name": "Sun Lorence Men's Athletic Running Tracksuit Set",
+    "desc": "Use promo code: SUITSET20 for 20% OFF‼️",
+    "img": "https://www.dropbox.com/scl/fi/ps1s51bxll3mwq8rftn64/Photo-Dec-08-2025-7-12-08-PM.jpg?rlkey=hany8re53rmze4d242j6ykdxa&st=lqzv2wwl&raw=1",
+    "salePrice": 40,
+    "oldPrice": 48,
+    "link": "https://amzn.to/3XO9fqp",
+    "category": "Clothing"
   }
 ]
