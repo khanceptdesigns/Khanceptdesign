@@ -1,15 +1,5 @@
 [
   {
-    "id": 2,
-    "name": "Movado Museum",
-    "desc": "Movado Museum Classic Men's Automatic Watch, Stainless Steel Bracelet, Self-Winding Luxury Timepiece - Gift for Him - 40mm",
-    "img": "https://www.dropbox.com/scl/fi/ooinsc2uax4tyj99rsrha/Photo-Dec-07-2025-3-59-03-AM.jpg?rlkey=sk87vp9uolqt4bjg4o4ag8opj&st=zdnacgku&raw=1",
-    "salePrice": 1036,
-    "oldPrice": 1295,
-    "link": "https://amzn.to/48Orpxu",
-    "category": "Watch"
-  },
-  {
     "id": 3,
     "name": "Sun Lorence Men's Athletic Running Tracksuit Set",
     "desc": "Use promo code: SUITSET20 for 20% OFF‼️",
@@ -18,6 +8,16 @@
     "oldPrice": 48,
     "link": "https://amzn.to/3XO9fqp",
     "category": "Clothing"
+  },
+  {
+    "id": 2,
+    "name": "Movado Museum",
+    "desc": "Movado Museum Classic Men's Automatic Watch, Stainless Steel Bracelet, Self-Winding Luxury Timepiece - Gift for Him - 40mm",
+    "img": "https://www.dropbox.com/scl/fi/ooinsc2uax4tyj99rsrha/Photo-Dec-07-2025-3-59-03-AM.jpg?rlkey=sk87vp9uolqt4bjg4o4ag8opj&st=zdnacgku&raw=1",
+    "salePrice": 1036,
+    "oldPrice": 1295,
+    "link": "https://amzn.to/48Orpxu",
+    "category": "Watch"
   },
   {
     "id": 1,
