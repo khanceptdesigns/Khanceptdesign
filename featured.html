@@ -52,11 +52,9 @@
 
 <div class="container">
   <h2 class="section-title">Featured Products</h2>
-
   <div class="search-container">
     <input type="text" id="searchBar" placeholder="Search products...">
   </div>
-
   <div class="product-grid" id="homeProductGrid"></div>
 </div>
 
@@ -72,11 +70,11 @@ const FILE_PATH = "products.json";
 const homeGrid = document.getElementById("homeProductGrid");
 let allProducts = [];
 
-// --- Load products from GitHub
+// --- Load products dynamically from GitHub
 async function loadProducts() {
   try {
     const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${FILE_PATH}`);
-    if(!res.ok) throw new Error("Failed to load products from GitHub");
+    if(!res.ok) throw new Error("Failed to load products.json");
     return await res.json();
   } catch(err) {
     console.error(err);
@@ -86,25 +84,25 @@ async function loadProducts() {
 }
 
 // --- Display products
-function displayProducts(grid, products){
+function displayProducts(grid, products) {
   if(products.length === 0){
-    grid.innerHTML = `<p style="text-align:center; font-size:1.2rem; padding:50px;">No products available.</p>`;
-  } else {
-    grid.innerHTML = products.map((prod, index) => `
-      <div class="product-card" id="product-${index}">
-        <img src="${prod.img}" alt="${prod.name}" onerror="this.src='images/fallback.png'"/>
-        <div class="product-info">
-          <h3>${prod.name}</h3>
-          <p>${prod.desc}</p>
-          <p style="font-size:1.1rem; margin-top:10px;">
-            ${prod.oldPrice ? `<span style="text-decoration: line-through; color:#777;">$${prod.oldPrice}</span>` : ""}
-            <span style="color:#d40000; font-weight:700; margin-left:${prod.oldPrice ? "10px" : "0"};">$${prod.salePrice}</span>
-          </p>
-          <a href="${prod.link}" target="_blank">Buy Now</a>
-        </div>
-      </div>
-    `).join("");
+    grid.innerHTML = `<p style="text-align:center; padding:50px;">No products available.</p>`;
+    return;
   }
+  grid.innerHTML = products.map((prod,index)=>`
+    <div class="product-card" id="product-${index}">
+      <img src="${prod.img}" alt="${prod.name}" onerror="this.src='images/fallback.png'"/>
+      <div class="product-info">
+        <h3>${prod.name}</h3>
+        <p>${prod.desc}</p>
+        <p style="font-size:1.1rem; margin-top:10px;">
+          ${prod.oldPrice ? `<span style="text-decoration: line-through; color:#777;">$${prod.oldPrice}</span>` : ""}
+          <span style="color:#d40000; font-weight:700; margin-left:${prod.oldPrice ? "10px" : "0"};">$${prod.salePrice}</span>
+        </p>
+        <a href="${prod.link}" target="_blank">Buy Now</a>
+      </div>
+    </div>
+  `).join('');
 }
 
 // --- Initial load
@@ -134,7 +132,7 @@ document.getElementById("searchBar").addEventListener("keyup", function(){
   displayProducts(homeGrid, filtered);
 });
 
-// --- Highlight active nav
+// --- Highlight active nav link
 const navLinks = document.querySelectorAll("nav ul li a");
 const currentURL = window.location.pathname.split("/").pop();
 navLinks.forEach(link => {
